@@ -2,13 +2,19 @@
 
 複数のサブグラフ (activity, fpmm, oi, orderbook, pnl) から Apollo Client を使ってデータを取得する Node.js (TypeScript) アプリケーションです。コマンドライン引数で、どのサブグラフのデータを取得するか・タイムスタンプの範囲を指定できます。
 
+#Problem
+- データ取得の進捗がわからないものがある
+   - 進捗バーの表示を統一した関数で管理したい
+- 時刻指定してもデータ取得のフィルターがかからないものがある
+   - それぞれのindexが何を表しているのかが分かれば対応できる   
+- fpmm のデータ取得がうまくいかない
+
 ## Directory Structure
 
 ```
 polymarket_indexer/
 ├── package.json
 ├── tsconfig.json
-├── path.ts                     # サブグラフのエンドポイント URL を設定
 ├── .gitignore
 ├── Dockerfile               # Docker で動かす場合に使用 (任意)
 └── src/
@@ -16,29 +22,28 @@ polymarket_indexer/
     │   └── apolloClient.ts  # Apollo Client の初期化
     ├── graphql/
     │   ├── activity/
+    │   │   ├── queries.ts
     │   │   └── schema.graphql
     │   ├── fpmm/
+    │   │   ├── queries.ts
     │   │   └── schema.graphql
     │   ├── oi/
+    │   │   ├── queries.ts
     │   │   └── schema.graphql
     │   ├── orderbook/
+    │   │   ├── queries.ts
     │   │   └── schema.graphql
     │   ├── pnl/
+    │   │   ├── queries.ts
     │   │   └── schema.graphql
-    ├── queries/
-    │   ├── activityQueries.ts
-    │   ├── fpmmQueries.ts
-    │   ├── oiQueries.ts
-    │   ├── orderbookQueries.ts
-    │   ├── pnlQueries.ts
-    │   └── index.ts         # まとめエクスポート
     ├── services/
-    │   ├── activityService.ts
-    │   ├── fpmmService.ts
-    │   ├── oiService.ts
-    │   ├── orderbookService.ts
-    │   ├── pnlService.ts
+    │   ├── activity.ts
+    │   ├── fpmm.ts
+    │   ├── oi.ts
+    │   ├── orderbook.ts
+    │   ├── pnl.ts
     │   └── index.ts         # まとめエクスポート
+    ├── path.ts              # サブグラフのエンドポイント URL を設定
     └── index.ts             # エントリーポイント (CLI 引数解析と実行)
 ```
 
@@ -60,6 +65,7 @@ polymarket_indexer/
 3. **`path.ts` ファイルの作成**
 
    `path.ts` に、以下のように各サブグラフのエンドポイント URL を設定してください。
+
    - 2024/12/25 現在、デフォルトのサブグラフは以下の通りです。
      - src:https://docs.polymarket.com/
 

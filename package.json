@@ -1,15 +1,30 @@
 {
-  "name": "polymarketindexer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@apollo/client": "^3.12.3",
-    "graphql": "^16.10.0"
-  }
+	"name": "polymarket_indexer",
+	"version": "1.0.0",
+	"description": "Polymarket subgraph data indexer",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "tsc && npm run copy-schemas",
+		"start": "node dist/index.js",
+		"dev": "ts-node src/index.ts",
+		"copy-schemas": "mkdir -p dist/graphql/{activity,fpmm,oi,orderbook,pnl} && for dir in activity fpmm oi orderbook pnl; do cp src/graphql/$dir/schema.graphql dist/graphql/$dir/; done"
+	},
+	"dependencies": {
+		"@apollo/client": "^3.8.8",
+		"@types/react": "^19.0.2",
+		"cli-progress": "^3.12.0",
+		"cross-fetch": "^4.0.0",
+		"dayjs": "^1.11.13",
+		"dotenv": "^16.3.1",
+		"graphql": "^16.8.1",
+		"minimist": "^1.2.8",
+		"react": "^19.0.0"
+	},
+	"devDependencies": {
+		"@types/cli-progress": "^3.11.6",
+		"@types/minimist": "^1.2.5",
+		"@types/node": "^20.10.5",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.3.3"
+	}
 }
